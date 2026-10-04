@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Perencanaan Anggaran Bulanan</title>
+  <style>
+    :root {
+      --primary: #1a73e8;
+      --secondary: #34a853;
+      --warning: #fbbc04;
+      --bg: #f8f9fa;
+      --card-bg: #ffffff;
+      --text: #202124;
+      --text-sub: #5f6368;
+      --border: #dadce0;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      padding: 16px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 480px;
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      border: 1px solid var(--border);
+    }
+
+    h2 {
+      font-size: 1.25rem;
+      margin-bottom: 4px;
+      color: var(--text);
+    }
+
+    .subtitle {
+      font-size: 0.85rem;
+      color: var(--text-sub);
+      margin-bottom: 16px;
+    }
+
+    /* Input Gaji */
+    .input-group {
+      margin-bottom: 20px;
+      background: #f1f3f4;
+      padding: 12px;
+      border-radius: 12px;
+    }
+
+    .input-group label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-sub);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+    }
+
+    .input-wrapper {
+      display: flex;
+      align-items: center;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 12px;
+    }
+
+    .input-wrapper span {
+      font-weight: bold;
+      color: var(--text-sub);
+      margin-right: 6px;
+    }
+
+    .input-wrapper input {
+      border: none;
+      outline: none;
+      width: 100%;
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: var(--text);
+    }
+
+    /* Hero Summary Card */
+    .hero-card {
+      background: linear-gradient(135deg, #1a73e8, #1557b0);
+      color: #fff;
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 20px;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(26, 115, 232, 0.3);
+    }
+
+    .hero-card .hero-label {
+      font-size: 0.85rem;
+      opacity: 0.9;
+    }
+
+    .hero-card .hero-value {
+      font-size: 1.8rem;
+      font-weight: 800;
+      margin: 6px 0;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+      font-size: 0.8rem;
+    }
+
+    /* Category Section */
+    .category-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin: 16px 0 10px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .category-title::before {
+      content: '';
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .cat-fixed::before { background-color: var(--primary); }
+    .cat-daily::before { background-color: var(--secondary); }
+    .cat-lifestyle::before { background-color: var(--warning); }
+
+    /* Field Card */
+    .field-card {
+      background: #f8f9fa;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+
+    .field-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .field-value {
+      color: var(--primary);
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+
+    .footer-note {
+      font-size: 0.8rem;
+      color: var(--text-sub);
+      text-align: center;
+      margin-top: 16px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Perencanaan Anggaran Bulanan</h2>
+  <div class="subtitle">Atur dan pantau alokasi pengeluaran Anda dari HP.</div>
+
+  <!-- Input Gaji -->
+  <div class="input-group">
+    <label for="income">Gaji Bersih per Bulan</label>
+    <div class="input-wrapper">
+      <span>Rp</span>
+      <input type="number" id="income" value="5100000" step="100000" oninput="calculate()">
+    </div>
+  </div>
+
+  <!-- Summary Card -->
+  <div class="hero-card">
+    <div class="hero-label">Sisa Gaji / Alokasi Tabungan</div>
+    <div class="hero-value" id="savings-display">Rp1.372.000</div>
+    <div class="stats-grid">
+      <div>
+        <div style="opacity: 0.8;">Total Pengeluaran</div>
+        <strong id="expense-display">Rp3.728.000</strong>
+      </div>
+      <div>
+        <div style="opacity: 0.8;">Rasio Tabungan</div>
+        <strong id="ratio-display">26.9%</strong>
+      </div>
+    </div>
+  </div>
+
+  <h3>Atur Batas Pengeluaran</h3>
+
+  <!-- Kategori 1: Fixed Costs -->
+  <div class="category-title cat-fixed">Kewajiban & Biaya Tetap</div>
+  <div class="field-card">
+    <div class="field-header">
+      <span>Biaya Kos</span>
+      <span class="field-value" id="val-kos">Rp400.000</span>
+    </div>
+    <input type="range" id="kos" min="0" max="1000000" step="50000" value="400000" oninput="calculate()">
+  </div>
+
+  <div class="field-card">
+    <div class="field-header">
+      <span>Cicilan Utang</span>
+      <span class="field-value" id="val-utang">Rp803.000</span>
+    </div>
+    <input type="range" id="utang" min="0" max="2000000" step="10000" value="803000" oninput="calculate()">
+  </div>
+
+  <!-- Kategori 2: Daily Needs -->
+  <div class="category-title cat-daily">Kebutuhan Harian & Operasional</div>
+  <div class="field-card">
+    <div class="field-header">
+      <span>Makan Harian</span>
+      <span class="field-value" id="val-makan">Rp1.200.000</span>
+    </div>
+    <input type="range" id="makan" min="500000" max="2500000" step="50000" value="1200000" oninput="calculate()">
+  </div>
+
+  <div class="field-card">
+    <div class="field-header">
+      <span>Bensin & Operasional</span>
+      <span class="field-value" id="val-bensin">Rp300.000</span>
+    </div>
+    <input type="range" id="bensin" min="100000" max="800000" step="25000" value="300000" oninput="calculate()">
+  </div>
+
+  <div class="field-card">
+    <div class="field-header">
+      <span>Kuota & Paket Data</span>
+      <span class="field-value" id="val-kuota">Rp150.000</span>
+    </div>
+    <input type="range" id="kuota" min="50000" max="500000" step="10000" value="150000" oninput="calculate()">
+  </div>
+
+  <!-- Kategori 3: Lifestyle -->
+  <div class="category-title cat-lifestyle">Gaya Hidup & Keperluan Lain</div>
+  <div class="field-card">
+    <div class="field-header">
+      <span>Membership Gym</span>
+      <span class="field-value" id="val-gym">Rp125.000</span>
+    </div>
+    <input type="range" id="gym" min="0" max="500000" step="25000" value="125000" oninput="calculate()">
+  </div>
+
+  <div class="field-card">
+    <div class="field-header">
+      <span>Jajan & Ngopi</span>
+      <span class="field-value" id="val-jajan">Rp450.000</span>
+    </div>
+    <input type="range" id="jajan" min="100000" max="1000000" step="25000" value="450000" oninput="calculate()">
+  </div>
+
+  <div class="field-card">
+    <div class="field-header">
+      <span>Dana Tak Terduga</span>
+      <span class="field-value" id="val-lainnya">Rp300.000</span>
+    </div>
+    <input type="range" id="lainnya" min="0" max="1000000" step="25000" value="300000" oninput="calculate()">
+  </div>
+
+  <div class="footer-note" id="footer-note">
+    Semua pengeluaran terkontrol secara presisi.
+  </div>
+</div>
+
+<script>
+  function formatRupiah(number) {
+    return 'Rp' + new Intl.NumberFormat('id-ID').format(number);
+  }
+
+  function calculate() {
+    const income = parseFloat(document.getElementById('income').value) || 0;
+    
+    const fields = ['kos', 'utang', 'makan', 'bensin', 'kuota', 'gym', 'jajan', 'lainnya'];
+    let totalExpense = 0;
+
+    fields.forEach(field => {
+      const val = parseFloat(document.getElementById(field).value) || 0;
+      document.getElementById('val-' + field).innerText = formatRupiah(val);
+      totalExpense += val;
+    });
+
+    const savings = income - totalExpense;
+    const ratio = income > 0 ? ((savings / income) * 100).toFixed(1) : 0;
+
+    document.getElementById('expense-display').innerText = formatRupiah(totalExpense);
+    document.getElementById('savings-display').innerText = formatRupiah(savings);
+    document.getElementById('ratio-display').innerText = ratio + '%';
+
+    const footerNote = document.getElementById('footer-note');
+    if (savings < 0) {
+      footerNote.innerText = "Peringatan: Pengeluaran Anda melebihi jumlah gaji!";
+      footerNote.style.color = "#d93025";
+    } else {
+      footerNote.innerText = `Semua pengeluaran terkontrol, menyisakan ${formatRupiah(savings)} untuk ditabung setiap bulan.`;
+      footerNote.style.color = "#5f6368";
+    }
+  }
+
+  // Run on load
+  calculate();
+</script>
+
+</body>
+</html>
